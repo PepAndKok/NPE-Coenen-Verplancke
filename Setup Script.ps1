@@ -4,6 +4,7 @@ $WINDOWS_7_VM = 'Windows_7_NPE'
 $RAM = '2048'
 $CPU = '2'
 $VRAM = '128'
+$NATNetworkName = "natNPECV"
 
 # Append VirtualBox’s installation directory to the PATH environment variable to make things easier
 $Env:Path += ";C:\Program Files\Oracle\VirtualBox\"
@@ -13,23 +14,33 @@ $Env:Path += ";C:\Program Files\Oracle\VirtualBox\"
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Stop DHCP server process if it's running
-#$dhcpProcess = Get-Process -Name VBoxDHCP -ErrorAction SilentlyContinue
-#if ($dhcpProcess) {
-    #Write-Host "Stopping VirtualBox DHCP server..."
-    #Stop-Process -Name VBoxDHCP -Force
-    #Start-Sleep -Seconds 2  # Wait for the process to terminate
-#}
+$dhcpProcess = Get-Process -Name VBoxDHCP -ErrorAction SilentlyContinue
+if ($dhcpProcess) {
+    Write-Host "Stopping VirtualBox DHCP server..."
+    Stop-Process -Name VBoxDHCP -Force
+    Start-Sleep -Seconds 2  # Wait for the process to terminate
+}
 
 # Remove existing NAT network if needed
-#VBoxManage natnetwork remove --netname natnetwork
+	# Check if the NAT network exists
+	if (VBoxManage.exe natnetwork list | Select-String -Pattern $NATNetworkName) {
+		# If it exists, remove it
+		VBoxManage.exe natnetwork remove --netname $NATNetworkName
+		Write-Output "NAT network '$NATNetworkName' removed successfully."
+	} else {
+		# If it doesn't exist, print a message
+		Write-Output "NAT network '$NATNetworkName' does not exist."
+	}
 
 # Add NAT network with desired settings
-#VBoxManage natnetwork add --netname natnetwork --network "192.168.0.0/24" --dhcp on --ipv6 off --enable
+Write-Output "Creating NAT network '$NATNetworkName'."
+VBoxManage natnetwork add --netname $NATNetworkName --network "192.168.0.0/24" --dhcp on --ipv6 off --enable
 
 # Start NAT network
-#VBoxManage natnetwork start --netname natnetwork
+Write-Output "Starting NAT network '$NATNetworkName'."
+VBoxManage natnetwork start --netname $NATNetworkName
 
-#Start-Sleep 10
+Start-Sleep 10
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 2. Create Kali VM for attack | +- 2min
@@ -39,7 +50,7 @@ $Env:Path += ";C:\Program Files\Oracle\VirtualBox\"
 VBoxManage createvm --name $KALI_VM --ostype 'Debian_64' --register
 
 # Set VM settings
-VBoxManage modifyvm $KALI_VM --cpus $CPU --memory $RAM --graphicscontroller vmsvga --vram $VRAM --nic1 natnetwork --nat-network1 natnetwork --clipboard-mode bidirectional --drag-and-drop bidirectional
+VBoxManage modifyvm $KALI_VM --cpus $CPU --memory $RAM --graphicscontroller vmsvga --vram $VRAM --nic1 natnetwork --nat-network1 $NATNetworkName --clipboard-mode bidirectional --drag-and-drop bidirectional
 
 # Add a SATA storage controller
 VBoxManage storagectl $KALI_VM --name 'SATA' --add sata --controller IntelAHCI --bootable on
@@ -63,34 +74,34 @@ Start-Sleep 10
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Register VM
-#VBoxManage createvm --name $WINDOWS_7_VM --ostype 'Windows7_64' --register
+VBoxManage createvm --name $WINDOWS_7_VM --ostype 'Windows7_64' --register
 
 # Set VM settings
-#VBoxManage modifyvm $WINDOWS_7_VM --cpus $CPU --memory $RAM --graphicscontroller vboxsvga --vram $VRAM --nic1 natnetwork --nat-network1 natnetwork --clipboard-mode bidirectional --drag-and-drop bidirectional
+VBoxManage modifyvm $WINDOWS_7_VM --cpus $CPU --memory $RAM --graphicscontroller vboxsvga --vram $VRAM --nic1 natnetwork --nat-network1 $NATNetworkName --clipboard-mode bidirectional --drag-and-drop bidirectional
 
 # Add a SATA storage controller
-#VBoxManage storagectl $WINDOWS_7_VM --name 'SATA' --add sata --controller IntelAHCI --bootable on
+VBoxManage storagectl $WINDOWS_7_VM --name 'SATA' --add sata --controller IntelAHCI --bootable on
 
 # Create the virtual disk file that will eventually become the C drive.
-#VBoxManage createhd --filename '.\64bit\Windows 7 Ultimate SP1 (64bit).vdi' --size 32768 --variant Standard
+# VBoxManage createhd --filename '.\64bit\Windows 7 Ultimate SP1 (64bit).vdi' --size 32768 --variant Standard
 
 # Add virtual disk to storage controller
-#VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 0 --device 0 --type hdd --medium '.\64bit\Windows 7 Ultimate SP1 (64bit).vdi'
+VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 0 --device 0 --type hdd --medium '.\64bit\Windows 7 Ultimate SP1 (64bit).vdi'
 
 # Add ISO file 
-#VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 1 --device 0 --type dvddrive --medium '.\en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso'
+# VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 1 --device 0 --type dvddrive --medium '.\en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso'
 
 # Perform unattended install 
-#VBoxManage unattended install $WINDOWS_7_VM `
-    #--iso='.\en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso' `
-    #--user=user --password=user `
-    #--install-additions --additions-iso='C:\Program Files\Oracle\VirtualBox\VBoxGuestAdditions.iso' `
+# VBoxManage unattended install $WINDOWS_7_VM `
+#     --iso='.\en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso' `
+#     --user=user --password=user `
+#     --install-additions --additions-iso='C:\Program Files\Oracle\VirtualBox\VBoxGuestAdditions.iso' `
 
 # Define boot order
-#VBoxManage modifyvm $WINDOWS_7_VM --boot1 dvd --boot2 disk --boot3 none --boot4 none
+VBoxManage modifyvm $WINDOWS_7_VM --boot1 disk --boot2 dvd --boot3 none --boot4 none
 
-# Start Kali VM
-#VBoxManage startvm $WINDOWS_7_VM --type gui
+# Start Windows VM
+VBoxManage startvm $WINDOWS_7_VM --type gui
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 4. Finish Setup

