@@ -56,7 +56,7 @@ VBoxManage modifyvm $KALI_VM --cpus $CPU --memory $RAM --graphicscontroller vmsv
 VBoxManage storagectl $KALI_VM --name 'SATA' --add sata --controller IntelAHCI --bootable on
 
 # Add existing VDI to SATA controller
-VBoxManage storageattach $KALI_VM --storagectl 'SATA' --port 0 --device 0 --type hdd --medium '.\64bit\Kali Linux 2023.4 (64bit).vdi'
+VBoxManage storageattach $KALI_VM --storagectl 'SATA' --port 0 --device 0 --type hdd --medium '.\VDI\Kali Linux 2023.4 (64bit).vdi'
 
 # Add VBoxGuestAdditions to VM
 VBoxManage storageattach $KALI_VM --storagectl 'SATA' --port 1 --device 0 --type dvddrive --medium 'C:\Program Files\Oracle\VirtualBox\VBoxGuestAdditions.iso'
@@ -82,20 +82,8 @@ VBoxManage modifyvm $WINDOWS_7_VM --cpus $CPU --memory $RAM --graphicscontroller
 # Add a SATA storage controller
 VBoxManage storagectl $WINDOWS_7_VM --name 'SATA' --add sata --controller IntelAHCI --bootable on
 
-# Create the virtual disk file that will eventually become the C drive.
-# VBoxManage createhd --filename '.\64bit\Windows 7 Ultimate SP1 (64bit).vdi' --size 32768 --variant Standard
-
 # Add virtual disk to storage controller
-VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 0 --device 0 --type hdd --medium '.\64bit\Windows 7 Ultimate SP1 (64bit).vdi'
-
-# Add ISO file 
-# VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 1 --device 0 --type dvddrive --medium '.\en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso'
-
-# Perform unattended install 
-# VBoxManage unattended install $WINDOWS_7_VM `
-#     --iso='.\en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso' `
-#     --user=user --password=user `
-#     --install-additions --additions-iso='C:\Program Files\Oracle\VirtualBox\VBoxGuestAdditions.iso' `
+VBoxManage storageattach $WINDOWS_7_VM --storagectl 'SATA' --port 0 --device 0 --type hdd --medium '.\VDI\Windows 7 Ultimate SP1 (64bit).vdi'
 
 # Define boot order
 VBoxManage modifyvm $WINDOWS_7_VM --boot1 disk --boot2 dvd --boot3 none --boot4 none
